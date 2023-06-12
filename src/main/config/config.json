@@ -1,0 +1,11 @@
+{
+  "PROJECT_NAMES": [
+    "BOOKKEEPER",
+    "OPENJPA"
+  ],
+  "REPO_PATH": [
+    "/Users/pierpaolospaziani/Downloads/bookkeeper/.git",
+    "/Users/pierpaolospaziani/Downloads/openjpa/.git"
+],
+  "LOG_FILE_NAME" : "log.txt"
+}
