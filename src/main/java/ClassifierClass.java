@@ -35,7 +35,7 @@ public class ClassifierClass {
         cleanUp(bookkeeperPath);
         cleanUp(openjpaPath);
     }
-
+ 
     public static void cleanUp(String path) {
         try {
             Files.walkFileTree(Paths.get(path), new SimpleFileVisitor<>() {
