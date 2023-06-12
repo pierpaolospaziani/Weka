@@ -1,8 +1,8 @@
-package utils;
+package app.utils;
 
 import java.util.List;
 
-import model.ClassifierEvaluation;
+import app.model.ClassifierEvaluation;
 
 public class ClassifierEvaluationUtil {
 	

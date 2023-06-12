@@ -1,6 +1,15 @@
+package app;
+
 import java.io.*;
+import java.util.logging.Logger;
 
 public class WalkForward {
+
+    private WalkForward() {
+        throw new IllegalStateException("Utility class");
+    }
+    private static final Logger LOGGER = Logger.getLogger(WalkForward.class.getName());
+    private static final String pathDelimiter = "/";
 
     private static void writeArffLine(FileWriter fileWriter, String[] val) throws IOException {
         for(int i = 3; i < val.length; i++){
@@ -36,7 +45,7 @@ public class WalkForward {
                 lastLine = line;
             }
             return Integer.parseInt(lastLine.split(",")[0]);
-        } catch (IOException e) {
+        } catch (Exception e) {
             return 0;
         }
     }
@@ -50,37 +59,38 @@ public class WalkForward {
             String line;
 
             for(int index = 2; index <= getMaxReleaseNumber(new FileReader(inputFilePath)); index++){
-                outputFilePathTrain = outputDirectoryPath + "/" + index + "/" + "Train.arff";
-                outputFilePathTest = outputDirectoryPath + "/" + index + "/" + "Test.arff";
-                new File(outputDirectoryPath + "/" + index).mkdir();
+                outputFilePathTrain = outputDirectoryPath + pathDelimiter + index + pathDelimiter + "Train.arff";
+                outputFilePathTest = outputDirectoryPath + pathDelimiter + index + pathDelimiter + "Test.arff";
+                new File(outputDirectoryPath + pathDelimiter + index).mkdir();
 
                 FileWriter fileWriterTrain = new FileWriter(outputFilePathTrain);
                 arffInit(fileWriterTrain, "Train");
                 FileWriter fileWriterTest = new FileWriter(outputFilePathTest);
                 arffInit(fileWriterTest, "Test");
 
-                BufferedReader reader = new BufferedReader(new FileReader(inputFilePath));
-
-                while ((line = reader.readLine()) != null) {
-                    String[] values = line.split(",");
-                    if(!values[0].equals("Version")){
-                        if(Integer.parseInt(values[0]) == index){
-                            // csv di testing
-                            writeArffLine(fileWriterTest, values);
-                        } else if (Integer.parseInt(values[0]) < index) {
-                            // csv di training
-                            writeArffLine(fileWriterTrain, values);
-                        } else {
-                            break;
+                try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
+                    while ((line = reader.readLine()) != null) {
+                        String[] values = line.split(",");
+                        if (!values[0].equals("Version")) {
+                            if (Integer.parseInt(values[0]) == index) {
+                                // csv di testing
+                                writeArffLine(fileWriterTest, values);
+                            } else if (Integer.parseInt(values[0]) < index) {
+                                // csv di training
+                                writeArffLine(fileWriterTrain, values);
+                            } else {
+                                break;
+                            }
                         }
                     }
+                } catch (Exception e) {
+                    LOGGER.severe(e.getMessage());
                 }
-                reader.close();
                 fileWriterTrain.close();
                 fileWriterTest.close();
             }
-        } catch (IOException e) {
-            e.printStackTrace();
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
         }
     }
 

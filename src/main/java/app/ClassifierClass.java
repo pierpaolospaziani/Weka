@@ -1,12 +1,16 @@
-import control.RetrieveWekaInfo;
-import files.EvaluationFile;
-import model.AllEvaluationLists;
+package app;
+
+import app.control.RetrieveWekaInfo;
+import app.files.EvaluationFile;
+import app.model.AllEvaluationLists;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.nio.file.attribute.BasicFileAttributes;
+import java.util.logging.Logger;
 
 public class ClassifierClass {
+    private static final Logger LOGGER = Logger.getLogger(ClassifierClass.class.getName());
 
     public static void main(String[] args) throws Exception {
         String bookkeeperPath = "BookkeeperWalkForward";
@@ -51,6 +55,8 @@ public class ClassifierClass {
                     return FileVisitResult.CONTINUE;
                 }
             });
-        } catch (Exception ignored){}
+        } catch (Exception e){
+            LOGGER.severe(e.getMessage());
+        }
     }
 }

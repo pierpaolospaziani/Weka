@@ -1,12 +1,8 @@
-package control;
+package app.control;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-
-import utils.ClassifierEvaluationUtil;
-import model.AllEvaluationLists;
-import model.ClassifierEvaluation;
+import app.model.AllEvaluationLists;
+import app.model.ClassifierEvaluation;
+import app.utils.ClassifierEvaluationUtil;
 import weka.attributeSelection.CfsSubsetEval;
 import weka.attributeSelection.GreedyStepwise;
 import weka.classifiers.CostMatrix;
@@ -21,6 +17,9 @@ import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
 import weka.filters.supervised.attribute.AttributeSelection;
 import weka.filters.supervised.instance.SpreadSubsample;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class RetrieveWekaInfo {
 
