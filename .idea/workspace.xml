@@ -28,12 +28,13 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/pierpaolospaziani/File/Università/ISW2/Weka&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "last_opened_file_path": "/Users/pierpaolospaziani/File/Università/ISW2/Weka"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />
@@ -41,14 +42,14 @@
   </component>
   <component name="RunManager" selected="Application.ClassifierClass">
     <configuration name="ClassifierClass" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="ClassifierClass" />
+      <option name="MAIN_CLASS_NAME" value="app.ClassifierClass" />
       <module name="Milestone2" />
       <method v="2">
         <option name="Make" enabled="true" />
       </method>
     </configuration>
     <configuration name="WalkForward" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
-      <option name="MAIN_CLASS_NAME" value="WalkForward" />
+      <option name="MAIN_CLASS_NAME" value="app.WalkForward" />
       <module name="Milestone2" />
       <method v="2">
         <option name="Make" enabled="true" />

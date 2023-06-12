@@ -4,6 +4,8 @@ import java.io.*;
 import java.util.logging.Logger;
 
 public class WalkForward {
+    private static final String bookkeeperFilePath = "/Users/pierpaolospaziani/File/Università/ISW2/ISW/BOOKKEEPER.csv";
+    private static final String openjpaFilePath = "/Users/pierpaolospaziani/File/Università/ISW2/ISW/OPENJPA.csv";
 
     private WalkForward() {
         throw new IllegalStateException("Utility class");
@@ -72,8 +74,7 @@ public class WalkForward {
             LOGGER.severe(e.getMessage());
         }
     }
-
-
+    
     private static void walkForward(String outputDirectoryPath, String inputFilePath){
 
         try {
@@ -102,11 +103,9 @@ public class WalkForward {
 
     public static void startWalkForward(String bookkeeperOutputPath, String openjpaOutputPath) {
         new File(bookkeeperOutputPath).mkdir();
-        String inputFilePath = "/Users/pierpaolospaziani/File/Università/ISW2/ISW/BOOKKEEPER.csv";
-        walkForward(bookkeeperOutputPath, inputFilePath);
+        walkForward(bookkeeperOutputPath, bookkeeperFilePath);
 
         new File(openjpaOutputPath).mkdir();
-        inputFilePath = "/Users/pierpaolospaziani/File/Università/ISW2/ISW/OPENJPA.csv";
-        walkForward(openjpaOutputPath, inputFilePath);
+        walkForward(openjpaOutputPath, openjpaFilePath);
     }
 }
