@@ -9,7 +9,7 @@ public class WalkForward {
         throw new IllegalStateException("Utility class");
     }
     private static final Logger LOGGER = Logger.getLogger(WalkForward.class.getName());
-    private static final String pathDelimiter = "/";
+    private static final String PATH_DELIMITER = "/";
 
     private static void writeArffLine(FileWriter fileWriter, String[] val) throws IOException {
         for(int i = 3; i < val.length; i++){
@@ -44,9 +44,32 @@ public class WalkForward {
             while ((line = br.readLine()) != null) {
                 lastLine = line;
             }
+            assert lastLine != null;
             return Integer.parseInt(lastLine.split(",")[0]);
         } catch (Exception e) {
             return 0;
+        }
+    }
+
+    private static void singlewalkForward(String inputFilePath, int index, FileWriter fileWriterTrain, FileWriter fileWriterTest){
+        String line;
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
+            while ((line = reader.readLine()) != null) {
+                String[] values = line.split(",");
+                if (!values[0].equals("Version")) {
+                    if (Integer.parseInt(values[0]) == index) {
+                        // csv di testing
+                        writeArffLine(fileWriterTest, values);
+                    } else if (Integer.parseInt(values[0]) < index) {
+                        // csv di training
+                        writeArffLine(fileWriterTrain, values);
+                    } else {
+                        break;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            LOGGER.severe(e.getMessage());
         }
     }
 
@@ -56,36 +79,19 @@ public class WalkForward {
         try {
             String outputFilePathTrain;
             String outputFilePathTest;
-            String line;
 
             for(int index = 2; index <= getMaxReleaseNumber(new FileReader(inputFilePath)); index++){
-                outputFilePathTrain = outputDirectoryPath + pathDelimiter + index + pathDelimiter + "Train.arff";
-                outputFilePathTest = outputDirectoryPath + pathDelimiter + index + pathDelimiter + "Test.arff";
-                new File(outputDirectoryPath + pathDelimiter + index).mkdir();
+                outputFilePathTrain = outputDirectoryPath + PATH_DELIMITER + index + PATH_DELIMITER + "Train.arff";
+                outputFilePathTest = outputDirectoryPath + PATH_DELIMITER + index + PATH_DELIMITER + "Test.arff";
+                new File(outputDirectoryPath + PATH_DELIMITER + index).mkdir();
 
                 FileWriter fileWriterTrain = new FileWriter(outputFilePathTrain);
                 arffInit(fileWriterTrain, "Train");
                 FileWriter fileWriterTest = new FileWriter(outputFilePathTest);
                 arffInit(fileWriterTest, "Test");
 
-                try (BufferedReader reader = new BufferedReader(new FileReader(inputFilePath))) {
-                    while ((line = reader.readLine()) != null) {
-                        String[] values = line.split(",");
-                        if (!values[0].equals("Version")) {
-                            if (Integer.parseInt(values[0]) == index) {
-                                // csv di testing
-                                writeArffLine(fileWriterTest, values);
-                            } else if (Integer.parseInt(values[0]) < index) {
-                                // csv di training
-                                writeArffLine(fileWriterTrain, values);
-                            } else {
-                                break;
-                            }
-                        }
-                    }
-                } catch (Exception e) {
-                    LOGGER.severe(e.getMessage());
-                }
+                singlewalkForward(inputFilePath, index, fileWriterTrain, fileWriterTest);
+
                 fileWriterTrain.close();
                 fileWriterTest.close();
             }
