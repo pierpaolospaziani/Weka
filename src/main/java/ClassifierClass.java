@@ -38,7 +38,7 @@ public class ClassifierClass {
 
     public static void cleanUp(String path) {
         try {
-            Files.walkFileTree(Paths.get(path), new SimpleFileVisitor<>() {
+            Files.walkFileTree(Paths.get(path), new SimpleFileVisitor<Path>() {
                 @Override
                 public FileVisitResult visitFile(Path file, BasicFileAttributes attrs) throws IOException {
                     Files.delete(file);
