@@ -5,20 +5,25 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="d8d12ade-e860-4841-ac31-a9e89a933cea" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/bookkeeper_avg.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bookkeeper_details.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/openjpa_avg.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/openjpa_details.csv" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/ClassifierClass.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/ClassifierClass.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/app/WalkForward.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/WalkForward.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ClassifierClass$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/ClassifierClass.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/WalkForward.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/control/RetrieveWekaInfo.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/files/EvaluationFile.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/model/AllEvaluationLists.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/model/ClassifierEvaluation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/utils/ClassifierEvaluationUtil.class" beforeDir="false" />
+      <change afterPath="$PROJECT_DIR$/.idea/libraries/weka.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bookkeeper_avg.csv" beforeDir="false" afterPath="$PROJECT_DIR$/bookkeeper_avg.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bookkeeper_details.csv" beforeDir="false" afterPath="$PROJECT_DIR$/bookkeeper_details.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openjpa_avg.csv" beforeDir="false" afterPath="$PROJECT_DIR$/openjpa_avg.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/openjpa_details.csv" beforeDir="false" afterPath="$PROJECT_DIR$/openjpa_details.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/config/config.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/control/RetrieveWekaInfo.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/control/RetrieveWekaInfo.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/files/EvaluationFile.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/files/EvaluationFile.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/AllEvaluationLists.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/AllEvaluationLists.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/model/ClassifierEvaluation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/model/ClassifierEvaluation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/app/utils/ClassifierEvaluationUtil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/app/utils/ClassifierEvaluationUtil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/WalkForward.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/WalkForward.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/control/RetrieveWekaInfo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/control/RetrieveWekaInfo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/files/EvaluationFile.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/files/EvaluationFile.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/model/AllEvaluationLists.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/model/AllEvaluationLists.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/model/ClassifierEvaluation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/model/ClassifierEvaluation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/app/utils/ClassifierEvaluationUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/app/utils/ClassifierEvaluationUtil.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,13 +48,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;ASKED_ADD_EXTERNAL_FILES&quot;: &quot;true&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/pierpaolospaziani/File/Università/ISW2/Weka&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "ASKED_ADD_EXTERNAL_FILES": "true",
+    "Downloaded.Files.Path.Enabled": "false",
+    "Repository.Attach.Annotations": "false",
+    "Repository.Attach.JavaDocs": "false",
+    "Repository.Attach.Sources": "false",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "SHARE_PROJECT_CONFIGURATION_FILES": "true",
+    "last_opened_file_path": "/Users/pierpaolospaziani/File/Università/ISW2/Weka",
+    "project.structure.last.edited": "SDKs",
+    "project.structure.proportion": "0.15",
+    "project.structure.side.proportion": "0.24022989",
+    "settings.editor.selected.configurable": "preferences.keymap"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
       <recent name="" />

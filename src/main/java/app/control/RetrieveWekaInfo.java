@@ -3,22 +3,21 @@ package app.control;
 import app.model.AllEvaluationLists;
 import app.model.ClassifierEvaluation;
 import app.utils.ClassifierEvaluationUtil;
-import weka.attributeSelection.CfsSubsetEval;
-import weka.attributeSelection.GreedyStepwise;
-import weka.classifiers.CostMatrix;
 import weka.classifiers.Evaluation;
 import weka.classifiers.bayes.NaiveBayes;
 import weka.classifiers.lazy.IBk;
-import weka.classifiers.meta.CostSensitiveClassifier;
-import weka.classifiers.meta.FilteredClassifier;
 import weka.classifiers.trees.RandomForest;
+import weka.core.Instance;
 import weka.core.Instances;
 import weka.core.converters.ConverterUtils.DataSource;
 import weka.filters.Filter;
-import weka.filters.supervised.attribute.AttributeSelection;
+import weka.filters.supervised.instance.Resample;
+import weka.filters.supervised.instance.SMOTE;
 import weka.filters.supervised.instance.SpreadSubsample;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 public class RetrieveWekaInfo {
@@ -39,32 +38,35 @@ public class RetrieveWekaInfo {
 		List<ClassifierEvaluation> simpleRandomForestList = new ArrayList<>();
 		List<ClassifierEvaluation> simpleNaiveBayesList = new ArrayList<>();
 		List<ClassifierEvaluation> simpleIBkList = new ArrayList<>();
-		List<ClassifierEvaluation> featureSelRandomForestList = new ArrayList<>();
-		List<ClassifierEvaluation> featureSelNaiveBayesList = new ArrayList<>();
-		List<ClassifierEvaluation> featureSelIBkList = new ArrayList<>();
-		List<ClassifierEvaluation> samplingRandomForestList = new ArrayList<>();
-		List<ClassifierEvaluation> samplingNaiveBayesList = new ArrayList<>();
-		List<ClassifierEvaluation> samplingIBkList = new ArrayList<>();
-		List<ClassifierEvaluation> costSensRandomForestList = new ArrayList<>();
-		List<ClassifierEvaluation> costSensNaiveBayesList = new ArrayList<>();
-		List<ClassifierEvaluation> costSensIBkList = new ArrayList<>();
+		List<ClassifierEvaluation> oversamplingRandomForestList = new ArrayList<>();
+		List<ClassifierEvaluation> oversamplingNaiveBayesList = new ArrayList<>();
+		List<ClassifierEvaluation> oversamplingIBkList = new ArrayList<>();
+		List<ClassifierEvaluation> undersamplingRandomForestList = new ArrayList<>();
+		List<ClassifierEvaluation> undersamplingNaiveBayesList = new ArrayList<>();
+		List<ClassifierEvaluation> undersamplingIBkList = new ArrayList<>();
+		List<ClassifierEvaluation> smoteRandomForestList = new ArrayList<>();
+		List<ClassifierEvaluation> smoteNaiveBayesList = new ArrayList<>();
+		List<ClassifierEvaluation> smoteIBkList = new ArrayList<>();
 
 		for(int index = 2; index < this.releaseIndex+1; index++){
+			System.out.println(index);
 
 			String completePath = this.path + index;
-
-			//VALIDATION WITHOUT FEATURE SELECTION AND WITHOUT SAMPLING
 			DataSource source1 = new DataSource(completePath + "/Train.arff");
 			DataSource source2 = new DataSource(completePath + "/Test.arff");
 			Instances training = source1.getDataSet();
 			Instances testing = source2.getDataSet();
 
+			List<Integer> countYN = getNumberOfYN(training);
+			int majoritySize = Collections.max(countYN);
+			int minoritySize = Collections.min(countYN);
+
 			RandomForest randomForestClassifier = new RandomForest();
 			NaiveBayes naiveBayesClassifier = new NaiveBayes();
 			IBk ibkClassifier = new IBk();
 
+			// VALIDATION WITHOUT SAMPLING
 			int numAttr = training.numAttributes();
-			// identifica attributo oggetto della predizione (bugginess)
 			training.setClassIndex(numAttr - 1);
 			testing.setClassIndex(numAttr - 1);
 
@@ -72,8 +74,8 @@ public class RetrieveWekaInfo {
 
 			randomForestClassifier.buildClassifier(training);
 			eval.evaluateModel(randomForestClassifier, testing);
-			ClassifierEvaluation simpleRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, false, false, false);
-	//		simpleRandomForest.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
+			ClassifierEvaluation simpleRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "No Sampling");
+			simpleRandomForest.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleRandomForest.setPrecision(eval.precision(0));
 			simpleRandomForest.setRecall(eval.recall(0));
 			simpleRandomForest.setAuc(eval.areaUnderROC(0));
@@ -84,18 +86,9 @@ public class RetrieveWekaInfo {
 			simpleRandomForest.setFn(eval.numFalseNegatives(0));
 			simpleRandomForestList.add(simpleRandomForest);
 
-//			System.out.println(index + " : PRECISION : " + simpleRandomForest.getPrecision());
-//			System.out.println(index + " : RECALL    : " + simpleRandomForest.getRecall());
-//			System.out.println(index + " : AUC       : " + simpleRandomForest.getAuc());
-//			System.out.println(index + " : KAPPA     : " + simpleRandomForest.getKappa());
-//			System.out.println(index + " : TP        : " + simpleRandomForest.getTp());
-//			System.out.println(index + " : FP        : " + simpleRandomForest.getFp());
-//			System.out.println(index + " : TN        : " + simpleRandomForest.getTn());
-//			System.out.println(index + " : FN        : " + simpleRandomForest.getFn() + "\n");
-
 			naiveBayesClassifier.buildClassifier(training);
 			eval.evaluateModel(naiveBayesClassifier, testing);
-			ClassifierEvaluation simpleNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, false, false, false);
+			ClassifierEvaluation simpleNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "No Sampling");
 			simpleNaiveBayes.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleNaiveBayes.setPrecision(eval.precision(0));
 			simpleNaiveBayes.setRecall(eval.recall(0));
@@ -109,7 +102,7 @@ public class RetrieveWekaInfo {
 
 			ibkClassifier.buildClassifier(training);
 			eval.evaluateModel(ibkClassifier, testing);
-			ClassifierEvaluation simpleIBk = new ClassifierEvaluation(projectName, index, IBK, false, false, false);
+			ClassifierEvaluation simpleIBk = new ClassifierEvaluation(projectName, index, IBK, "No Sampling");
 			simpleIBk.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleIBk.setPrecision(eval.precision(0));
 			simpleIBk.setRecall(eval.recall(0));
@@ -122,174 +115,169 @@ public class RetrieveWekaInfo {
 			simpleIBkList.add(simpleIBk);
 
 
-			//VALIDATION WITH FEATURE SELECTION (GREEDY BACKWARD SEARCH) AND WITHOUT SAMPLING
-			CfsSubsetEval subsetEval = new CfsSubsetEval();
-			GreedyStepwise search = new GreedyStepwise();
-			search.setSearchBackwards(true);
+			// VALIDATION WITH OVERSAMPLING
+			Resample resample = new Resample();
+			String z = Double.toString(2 * ((double) majoritySize / training.size()) * 100);
+			resample.setOptions(new String[]{"-B", "1.0", "-Z", z});
+			resample.setInputFormat(training);
 
-			AttributeSelection filter = new AttributeSelection();
-			filter.setEvaluator(subsetEval);
-			filter.setSearch(search);
-			filter.setInputFormat(training);
+			Instances filteredTraining = Filter.useFilter(training, resample);
+			Instances filteredTesting = Filter.useFilter(testing, resample);
 
-			Instances filteredTraining = Filter.useFilter(training, filter);
-			Instances filteredTesting = Filter.useFilter(testing, filter);
-
-			int numAttrFiltered = filteredTraining.numAttributes();
-			filteredTraining.setClassIndex(numAttrFiltered - 1);
+			numAttr = filteredTraining.numAttributes();
+			filteredTraining.setClassIndex(numAttr - 1);
 
 			randomForestClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(randomForestClassifier, filteredTesting);
-			ClassifierEvaluation featureSelRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, true, false, false);
-			featureSelRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			featureSelRandomForest.setPrecision(eval.precision(0));
-			featureSelRandomForest.setRecall(eval.recall(0));
-			featureSelRandomForest.setAuc(eval.areaUnderROC(0));
-			featureSelRandomForest.setKappa(eval.kappa());
-			featureSelRandomForest.setTp(eval.numTruePositives(0));
-			featureSelRandomForest.setFp(eval.numFalsePositives(0));
-			featureSelRandomForest.setTn(eval.numTrueNegatives(0));
-			featureSelRandomForest.setFn(eval.numFalseNegatives(0));
-			featureSelRandomForestList.add(featureSelRandomForest);
+			ClassifierEvaluation oversamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "Oversampling");
+			oversamplingRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			oversamplingRandomForest.setPrecision(eval.precision(0));
+			oversamplingRandomForest.setRecall(eval.recall(0));
+			oversamplingRandomForest.setAuc(eval.areaUnderROC(0));
+			oversamplingRandomForest.setKappa(eval.kappa());
+			oversamplingRandomForest.setTp(eval.numTruePositives(0));
+			oversamplingRandomForest.setFp(eval.numFalsePositives(0));
+			oversamplingRandomForest.setTn(eval.numTrueNegatives(0));
+			oversamplingRandomForest.setFn(eval.numFalseNegatives(0));
+			oversamplingRandomForestList.add(oversamplingRandomForest);
 
 			naiveBayesClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
-			ClassifierEvaluation featureSelNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, true, false, false);
-			featureSelNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			featureSelNaiveBayes.setPrecision(eval.precision(0));
-			featureSelNaiveBayes.setRecall(eval.recall(0));
-			featureSelNaiveBayes.setAuc(eval.areaUnderROC(0));
-			featureSelNaiveBayes.setKappa(eval.kappa());
-			featureSelNaiveBayes.setTp(eval.numTruePositives(0));
-			featureSelNaiveBayes.setFp(eval.numFalsePositives(0));
-			featureSelNaiveBayes.setTn(eval.numTrueNegatives(0));
-			featureSelNaiveBayes.setFn(eval.numFalseNegatives(0));
-			featureSelNaiveBayesList.add(featureSelNaiveBayes);
+			ClassifierEvaluation oversamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "Oversampling");
+			oversamplingNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			oversamplingNaiveBayes.setPrecision(eval.precision(0));
+			oversamplingNaiveBayes.setRecall(eval.recall(0));
+			oversamplingNaiveBayes.setAuc(eval.areaUnderROC(0));
+			oversamplingNaiveBayes.setKappa(eval.kappa());
+			oversamplingNaiveBayes.setTp(eval.numTruePositives(0));
+			oversamplingNaiveBayes.setFp(eval.numFalsePositives(0));
+			oversamplingNaiveBayes.setTn(eval.numTrueNegatives(0));
+			oversamplingNaiveBayes.setFn(eval.numFalseNegatives(0));
+			oversamplingNaiveBayesList.add(oversamplingNaiveBayes);
 
 			ibkClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(ibkClassifier, filteredTesting);
-			ClassifierEvaluation featureSelIBk = new ClassifierEvaluation(projectName, index, IBK, true, false, false);
-			featureSelIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			featureSelIBk.setPrecision(eval.precision(0));
-			featureSelIBk.setRecall(eval.recall(0));
-			featureSelIBk.setAuc(eval.areaUnderROC(0));
-			featureSelIBk.setKappa(eval.kappa());
-			featureSelIBk.setTp(eval.numTruePositives(0));
-			featureSelIBk.setFp(eval.numFalsePositives(0));
-			featureSelIBk.setTn(eval.numTrueNegatives(0));
-			featureSelIBk.setFn(eval.numFalseNegatives(0));
-			featureSelIBkList.add(featureSelIBk);
+			ClassifierEvaluation oversamplingIBk = new ClassifierEvaluation(projectName, index, IBK, "Oversampling");
+			oversamplingIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			oversamplingIBk.setPrecision(eval.precision(0));
+			oversamplingIBk.setRecall(eval.recall(0));
+			oversamplingIBk.setAuc(eval.areaUnderROC(0));
+			oversamplingIBk.setKappa(eval.kappa());
+			oversamplingIBk.setTp(eval.numTruePositives(0));
+			oversamplingIBk.setFp(eval.numFalsePositives(0));
+			oversamplingIBk.setTn(eval.numTrueNegatives(0));
+			oversamplingIBk.setFn(eval.numFalseNegatives(0));
+			oversamplingIBkList.add(oversamplingIBk);
 
 
-			//VALIDATION WITH FEATURE SELECTION (GREEDY BACKWARD SEARCH) AND WITH SAMPLING (UNDERSAMPLING)
+			// VALIDATION WITH UNDERSAMPLING
 			SpreadSubsample spreadSubsample = new SpreadSubsample();
-			spreadSubsample.setInputFormat(filteredTraining);
+			spreadSubsample.setInputFormat(training);
 			spreadSubsample.setOptions(new String[] {"-M", "1.0"});
 
-			FilteredClassifier fc = new FilteredClassifier();
-			fc.setFilter(spreadSubsample);
+			filteredTraining = Filter.useFilter(training, spreadSubsample);
+			filteredTesting = Filter.useFilter(testing, spreadSubsample);
 
-			fc.setClassifier(randomForestClassifier);
-			fc.buildClassifier(filteredTraining);
-			eval.evaluateModel(fc, filteredTesting);
-			ClassifierEvaluation samplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, true, true, false);
-			samplingRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			samplingRandomForest.setPrecision(eval.precision(0));
-			samplingRandomForest.setRecall(eval.recall(0));
-			samplingRandomForest.setAuc(eval.areaUnderROC(0));
-			samplingRandomForest.setKappa(eval.kappa());
-			samplingRandomForest.setTp(eval.numTruePositives(0));
-			samplingRandomForest.setFp(eval.numFalsePositives(0));
-			samplingRandomForest.setTn(eval.numTrueNegatives(0));
-			samplingRandomForest.setFn(eval.numFalseNegatives(0));
-			samplingRandomForestList.add(samplingRandomForest);
+			numAttr = filteredTraining.numAttributes();
+			filteredTraining.setClassIndex(numAttr - 1);
 
-			fc.setClassifier(naiveBayesClassifier);
-			fc.buildClassifier(filteredTraining);
-			eval.evaluateModel(fc, filteredTesting);
-			ClassifierEvaluation samplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, true, true, false);
-			samplingNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			samplingNaiveBayes.setPrecision(eval.precision(0));
-			samplingNaiveBayes.setRecall(eval.recall(0));
-			samplingNaiveBayes.setAuc(eval.areaUnderROC(0));
-			samplingNaiveBayes.setKappa(eval.kappa());
-			samplingNaiveBayes.setTp(eval.numTruePositives(0));
-			samplingNaiveBayes.setFp(eval.numFalsePositives(0));
-			samplingNaiveBayes.setTn(eval.numTrueNegatives(0));
-			samplingNaiveBayes.setFn(eval.numFalseNegatives(0));
-			samplingNaiveBayesList.add(samplingNaiveBayes);
+			randomForestClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(randomForestClassifier, filteredTesting);
+			ClassifierEvaluation undersamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "Undersampling");
+			undersamplingRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			undersamplingRandomForest.setPrecision(eval.precision(0));
+			undersamplingRandomForest.setRecall(eval.recall(0));
+			undersamplingRandomForest.setAuc(eval.areaUnderROC(0));
+			undersamplingRandomForest.setKappa(eval.kappa());
+			undersamplingRandomForest.setTp(eval.numTruePositives(0));
+			undersamplingRandomForest.setFp(eval.numFalsePositives(0));
+			undersamplingRandomForest.setTn(eval.numTrueNegatives(0));
+			undersamplingRandomForest.setFn(eval.numFalseNegatives(0));
+			undersamplingRandomForestList.add(undersamplingRandomForest);
 
-			fc.setClassifier(ibkClassifier);
-			fc.buildClassifier(filteredTraining);
-			eval.evaluateModel(fc, filteredTesting);
-			ClassifierEvaluation samplingIBk = new ClassifierEvaluation(projectName, index, IBK, true, true, false);
-			samplingIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			samplingIBk.setPrecision(eval.precision(0));
-			samplingIBk.setRecall(eval.recall(0));
-			samplingIBk.setAuc(eval.areaUnderROC(0));
-			samplingIBk.setKappa(eval.kappa());
-			samplingIBk.setTp(eval.numTruePositives(0));
-			samplingIBk.setFp(eval.numFalsePositives(0));
-			samplingIBk.setTn(eval.numTrueNegatives(0));
-			samplingIBk.setFn(eval.numFalseNegatives(0));
-			samplingIBkList.add(samplingIBk);
+			naiveBayesClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
+			ClassifierEvaluation undersamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "Undersampling");
+			undersamplingNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			undersamplingNaiveBayes.setPrecision(eval.precision(0));
+			undersamplingNaiveBayes.setRecall(eval.recall(0));
+			undersamplingNaiveBayes.setAuc(eval.areaUnderROC(0));
+			undersamplingNaiveBayes.setKappa(eval.kappa());
+			undersamplingNaiveBayes.setTp(eval.numTruePositives(0));
+			undersamplingNaiveBayes.setFp(eval.numFalsePositives(0));
+			undersamplingNaiveBayes.setTn(eval.numTrueNegatives(0));
+			undersamplingNaiveBayes.setFn(eval.numFalseNegatives(0));
+			undersamplingNaiveBayesList.add(undersamplingNaiveBayes);
 
-			//VALIDATION WITH FEATURE SELECTION (GREEDY BACKWARD SEARCH) AND WITH SENSITIVE LEARNING (CFN = 10*CFP)
-			CostMatrix costMatrix = new CostMatrix(2);
-			costMatrix.setCell(0, 0, 0.0);
-			costMatrix.setCell(1, 0, 10.0);
-			costMatrix.setCell(0, 1, 1.0);
-			costMatrix.setCell(1, 1, 0.0);
+			ibkClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(ibkClassifier, filteredTesting);
+			ClassifierEvaluation undersamplingIBk = new ClassifierEvaluation(projectName, index, IBK, "Undersampling");
+			undersamplingIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			undersamplingIBk.setPrecision(eval.precision(0));
+			undersamplingIBk.setRecall(eval.recall(0));
+			undersamplingIBk.setAuc(eval.areaUnderROC(0));
+			undersamplingIBk.setKappa(eval.kappa());
+			undersamplingIBk.setTp(eval.numTruePositives(0));
+			undersamplingIBk.setFp(eval.numFalsePositives(0));
+			undersamplingIBk.setTn(eval.numTrueNegatives(0));
+			undersamplingIBk.setFn(eval.numFalseNegatives(0));
+			undersamplingIBkList.add(undersamplingIBk);
 
-			CostSensitiveClassifier csc = new CostSensitiveClassifier();
 
-			csc.setClassifier(randomForestClassifier);
-			csc.setCostMatrix(costMatrix);
-			csc.buildClassifier(filteredTraining);
-			eval.evaluateModel(csc, filteredTesting);
-			ClassifierEvaluation costSensRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, true, false, true);
-			costSensRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			costSensRandomForest.setPrecision(eval.precision(0));
-			costSensRandomForest.setRecall(eval.recall(0));
-			costSensRandomForest.setAuc(eval.areaUnderROC(0));
-			costSensRandomForest.setKappa(eval.kappa());
-			costSensRandomForest.setTp(eval.numTruePositives(0));
-			costSensRandomForest.setFp(eval.numFalsePositives(0));
-			costSensRandomForest.setTn(eval.numTrueNegatives(0));
-			costSensRandomForest.setFn(eval.numFalseNegatives(0));
-			costSensRandomForestList.add(costSensRandomForest);
+			// VALIDATION WITH SMOTE
+			SMOTE smote = new SMOTE();
+			String p = (minoritySize > 0) ? Double.toString(100.0 * (majoritySize - minoritySize) / minoritySize) : "100.0";
+			smote.setOptions(new String[] {"-P", p});
+			smote.setInputFormat(training);
+			try {
+				filteredTraining = Filter.useFilter(training, smote);
+			} catch (Exception ignored) {}
+			filteredTesting = Filter.useFilter(testing, smote);
 
-			csc.setClassifier(naiveBayesClassifier);
-			csc.setCostMatrix(costMatrix);
-			csc.buildClassifier(filteredTraining);
-			eval.evaluateModel(csc, filteredTesting);
-			ClassifierEvaluation costSensNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, true, false, true);
-			costSensNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			costSensNaiveBayes.setPrecision(eval.precision(0));
-			costSensNaiveBayes.setRecall(eval.recall(0));
-			costSensNaiveBayes.setAuc(eval.areaUnderROC(0));
-			costSensNaiveBayes.setKappa(eval.kappa());
-			costSensNaiveBayes.setTp(eval.numTruePositives(0));
-			costSensNaiveBayes.setFp(eval.numFalsePositives(0));
-			costSensNaiveBayes.setTn(eval.numTrueNegatives(0));
-			costSensNaiveBayes.setFn(eval.numFalseNegatives(0));
-			costSensNaiveBayesList.add(costSensNaiveBayes);
+			numAttr = filteredTraining.numAttributes();
+			filteredTraining.setClassIndex(numAttr - 1);
 
-			csc.setClassifier(ibkClassifier);
-			csc.setCostMatrix(costMatrix);
-			csc.buildClassifier(filteredTraining);
-			eval.evaluateModel(csc, filteredTesting);
-			ClassifierEvaluation costSensIBk = new ClassifierEvaluation(projectName, index, IBK, true, false, true);
-			costSensIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
-			costSensIBk.setPrecision(eval.precision(0));
-			costSensIBk.setRecall(eval.recall(0));
-			costSensIBk.setAuc(eval.areaUnderROC(0));
-			costSensIBk.setKappa(eval.kappa());
-			costSensIBk.setTp(eval.numTruePositives(0));
-			costSensIBk.setFp(eval.numFalsePositives(0));
-			costSensIBk.setTn(eval.numTrueNegatives(0));
-			costSensIBk.setFn(eval.numFalseNegatives(0));
-			costSensIBkList.add(costSensIBk);
+			randomForestClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(randomForestClassifier, filteredTesting);
+			ClassifierEvaluation smoteRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "SMOTE");
+			smoteRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			smoteRandomForest.setPrecision(eval.precision(0));
+			smoteRandomForest.setRecall(eval.recall(0));
+			smoteRandomForest.setAuc(eval.areaUnderROC(0));
+			smoteRandomForest.setKappa(eval.kappa());
+			smoteRandomForest.setTp(eval.numTruePositives(0));
+			smoteRandomForest.setFp(eval.numFalsePositives(0));
+			smoteRandomForest.setTn(eval.numTrueNegatives(0));
+			smoteRandomForest.setFn(eval.numFalseNegatives(0));
+			smoteRandomForestList.add(smoteRandomForest);
+
+			naiveBayesClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
+			ClassifierEvaluation smoteNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "SMOTE");
+			smoteNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			smoteNaiveBayes.setPrecision(eval.precision(0));
+			smoteNaiveBayes.setRecall(eval.recall(0));
+			smoteNaiveBayes.setAuc(eval.areaUnderROC(0));
+			smoteNaiveBayes.setKappa(eval.kappa());
+			smoteNaiveBayes.setTp(eval.numTruePositives(0));
+			smoteNaiveBayes.setFp(eval.numFalsePositives(0));
+			smoteNaiveBayes.setTn(eval.numTrueNegatives(0));
+			smoteNaiveBayes.setFn(eval.numFalseNegatives(0));
+			smoteNaiveBayesList.add(smoteNaiveBayes);
+
+			ibkClassifier.buildClassifier(filteredTraining);
+			eval.evaluateModel(ibkClassifier, filteredTesting);
+			ClassifierEvaluation smoteIBk = new ClassifierEvaluation(projectName, index, IBK, "SMOTE");
+			smoteIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
+			smoteIBk.setPrecision(eval.precision(0));
+			smoteIBk.setRecall(eval.recall(0));
+			smoteIBk.setAuc(eval.areaUnderROC(0));
+			smoteIBk.setKappa(eval.kappa());
+			smoteIBk.setTp(eval.numTruePositives(0));
+			smoteIBk.setFp(eval.numFalsePositives(0));
+			smoteIBk.setTn(eval.numTrueNegatives(0));
+			smoteIBk.setFn(eval.numFalseNegatives(0));
+			smoteIBkList.add(smoteIBk);
 		}
 
 		List<ClassifierEvaluation> avgEvaluationsList = new ArrayList<>();
@@ -297,33 +285,45 @@ public class RetrieveWekaInfo {
 		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(simpleRandomForestList));
 		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(simpleNaiveBayesList));
 		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(simpleIBkList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(featureSelRandomForestList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(featureSelNaiveBayesList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(featureSelIBkList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(samplingRandomForestList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(samplingNaiveBayesList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(samplingIBkList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(costSensRandomForestList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(costSensNaiveBayesList));
-		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(costSensIBkList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(undersamplingRandomForestList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(undersamplingNaiveBayesList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(undersamplingIBkList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(oversamplingRandomForestList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(oversamplingNaiveBayesList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(oversamplingIBkList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(smoteRandomForestList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(smoteNaiveBayesList));
+		avgEvaluationsList.add(ClassifierEvaluationUtil.getAvgEvaluation(smoteIBkList));
 
 		AllEvaluationLists allLists = new AllEvaluationLists();
 
 		allLists.setAvgEvaluationsList(avgEvaluationsList);
-		allLists.setCostSensIBkList(costSensIBkList);
-		allLists.setCostSensNaiveBayesList(costSensNaiveBayesList);
-		allLists.setCostSensRandomForestList(costSensRandomForestList);
-		allLists.setFeatureSelIBkList(featureSelIBkList);
-		allLists.setFeatureSelNaiveBayesList(featureSelNaiveBayesList);
-		allLists.setFeatureSelRandomForestList(featureSelRandomForestList);
-		allLists.setSamplingIBkList(samplingIBkList);
-		allLists.setSamplingNaiveBayesList(samplingNaiveBayesList);
-		allLists.setSamplingRandomForestList(samplingRandomForestList);
+		allLists.setSmoteIBkList(smoteIBkList);
+		allLists.setSmoteNaiveBayesList(smoteNaiveBayesList);
+		allLists.setSmoteRandomForestList(smoteRandomForestList);
+		allLists.setUndersamplingIBkList(undersamplingIBkList);
+		allLists.setUndersamplingNaiveBayesList(undersamplingNaiveBayesList);
+		allLists.setUndersamplingRandomForestList(undersamplingRandomForestList);
+		allLists.setOversamplingIBkList(oversamplingIBkList);
+		allLists.setOversamplingNaiveBayesList(oversamplingNaiveBayesList);
+		allLists.setOversamplingRandomForestList(oversamplingRandomForestList);
 		allLists.setSimpleIBkList(simpleIBkList);
 		allLists.setSimpleNaiveBayesList(simpleNaiveBayesList);
 		allLists.setSimpleRandomForestList(simpleRandomForestList);
 		allLists.mergeAll();
 
 		return allLists;
+	}
+
+	private List<Integer> getNumberOfYN(Instances training) {
+		int countYes = 0;
+		int countNo = 0;
+		for (Instance instance : training) {
+			if (instance.stringValue(instance.numAttributes()-1).equals("true"))
+				countYes++;
+			else
+				countNo++;
+		}
+		return Arrays.asList(countNo, countYes);
 	}
 }

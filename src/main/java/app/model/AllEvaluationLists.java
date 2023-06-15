@@ -8,15 +8,15 @@ public class AllEvaluationLists {
 	private List<ClassifierEvaluation> simpleRandomForestList;
 	private List<ClassifierEvaluation> simpleNaiveBayesList;
 	private List<ClassifierEvaluation> simpleIBkList;
-	private List<ClassifierEvaluation> featureSelRandomForestList;
-	private List<ClassifierEvaluation> featureSelNaiveBayesList;
-	private List<ClassifierEvaluation> featureSelIBkList;
-	private List<ClassifierEvaluation> samplingRandomForestList;
-	private List<ClassifierEvaluation> samplingNaiveBayesList;
-	private List<ClassifierEvaluation> samplingIBkList;
-	private List<ClassifierEvaluation> costSensRandomForestList;
-	private List<ClassifierEvaluation> costSensNaiveBayesList;
-	private List<ClassifierEvaluation> costSensIBkList;
+	private List<ClassifierEvaluation> undersamplingRandomForestList;
+	private List<ClassifierEvaluation> undersamplingNaiveBayesList;
+	private List<ClassifierEvaluation> undersamplingIBkList;
+	private List<ClassifierEvaluation> oversamplingRandomForestList;
+	private List<ClassifierEvaluation> oversamplingNaiveBayesList;
+	private List<ClassifierEvaluation> oversamplingIBkList;
+	private List<ClassifierEvaluation> smoteRandomForestList;
+	private List<ClassifierEvaluation> smoteNaiveBayesList;
+	private List<ClassifierEvaluation> smoteIBkList;
 	
 	private List<ClassifierEvaluation> avgEvaluationsList;
 	private List<ClassifierEvaluation> mergeEvaluationsList = new ArrayList<>();
@@ -25,15 +25,15 @@ public class AllEvaluationLists {
 		this.mergeEvaluationsList.addAll(simpleRandomForestList);
 		this.mergeEvaluationsList.addAll(simpleNaiveBayesList);
 		this.mergeEvaluationsList.addAll(simpleIBkList);
-		this.mergeEvaluationsList.addAll(featureSelRandomForestList);
-		this.mergeEvaluationsList.addAll(featureSelNaiveBayesList);
-		this.mergeEvaluationsList.addAll(featureSelIBkList);
-		this.mergeEvaluationsList.addAll(samplingRandomForestList);
-		this.mergeEvaluationsList.addAll(samplingNaiveBayesList);
-		this.mergeEvaluationsList.addAll(samplingIBkList);
-		this.mergeEvaluationsList.addAll(costSensRandomForestList);
-		this.mergeEvaluationsList.addAll(costSensNaiveBayesList);
-		this.mergeEvaluationsList.addAll(costSensIBkList);
+		this.mergeEvaluationsList.addAll(undersamplingRandomForestList);
+		this.mergeEvaluationsList.addAll(undersamplingNaiveBayesList);
+		this.mergeEvaluationsList.addAll(undersamplingIBkList);
+		this.mergeEvaluationsList.addAll(oversamplingRandomForestList);
+		this.mergeEvaluationsList.addAll(oversamplingNaiveBayesList);
+		this.mergeEvaluationsList.addAll(oversamplingIBkList);
+		this.mergeEvaluationsList.addAll(smoteRandomForestList);
+		this.mergeEvaluationsList.addAll(smoteNaiveBayesList);
+		this.mergeEvaluationsList.addAll(smoteIBkList);
 		
 	}
 	
@@ -76,110 +76,110 @@ public class AllEvaluationLists {
 	/**
 	 * @return the featureSelRandomForestList
 	 */
-	public List<ClassifierEvaluation> getFeatureSelRandomForestList() {
-		return featureSelRandomForestList;
+	public List<ClassifierEvaluation> getUndersamplingRandomForestList() {
+		return undersamplingRandomForestList;
 	}
 	/**
-	 * @param featureSelRandomForestList the featureSelRandomForestList to set
+	 * @param undersamplingRandomForestList the featureSelRandomForestList to set
 	 */
-	public void setFeatureSelRandomForestList(List<ClassifierEvaluation> featureSelRandomForestList) {
-		this.featureSelRandomForestList = featureSelRandomForestList;
+	public void setUndersamplingRandomForestList(List<ClassifierEvaluation> undersamplingRandomForestList) {
+		this.undersamplingRandomForestList = undersamplingRandomForestList;
 	}
 	/**
 	 * @return the featureSelNaiveBayesList
 	 */
-	public List<ClassifierEvaluation> getFeatureSelNaiveBayesList() {
-		return featureSelNaiveBayesList;
+	public List<ClassifierEvaluation> getUndersamplingNaiveBayesList() {
+		return undersamplingNaiveBayesList;
 	}
 	/**
-	 * @param featureSelNaiveBayesList the featureSelNaiveBayesList to set
+	 * @param undersamplingNaiveBayesList the featureSelNaiveBayesList to set
 	 */
-	public void setFeatureSelNaiveBayesList(List<ClassifierEvaluation> featureSelNaiveBayesList) {
-		this.featureSelNaiveBayesList = featureSelNaiveBayesList;
+	public void setUndersamplingNaiveBayesList(List<ClassifierEvaluation> undersamplingNaiveBayesList) {
+		this.undersamplingNaiveBayesList = undersamplingNaiveBayesList;
 	}
 	/**
 	 * @return the featureSelIBkList
 	 */
-	public List<ClassifierEvaluation> getFeatureSelIBkList() {
-		return featureSelIBkList;
+	public List<ClassifierEvaluation> getUndersamplingIBkList() {
+		return undersamplingIBkList;
 	}
 	/**
-	 * @param featureSelIBkList the featureSelIBkList to set
+	 * @param undersamplingIBkList the featureSelIBkList to set
 	 */
-	public void setFeatureSelIBkList(List<ClassifierEvaluation> featureSelIBkList) {
-		this.featureSelIBkList = featureSelIBkList;
+	public void setUndersamplingIBkList(List<ClassifierEvaluation> undersamplingIBkList) {
+		this.undersamplingIBkList = undersamplingIBkList;
 	}
 	/**
 	 * @return the samplingRandomForestList
 	 */
-	public List<ClassifierEvaluation> getSamplingRandomForestList() {
-		return samplingRandomForestList;
+	public List<ClassifierEvaluation> getOversamplingRandomForestList() {
+		return oversamplingRandomForestList;
 	}
 	/**
-	 * @param samplingRandomForestList the samplingRandomForestList to set
+	 * @param oversamplingRandomForestList the samplingRandomForestList to set
 	 */
-	public void setSamplingRandomForestList(List<ClassifierEvaluation> samplingRandomForestList) {
-		this.samplingRandomForestList = samplingRandomForestList;
+	public void setOversamplingRandomForestList(List<ClassifierEvaluation> oversamplingRandomForestList) {
+		this.oversamplingRandomForestList = oversamplingRandomForestList;
 	}
 	/**
 	 * @return the samplingNaiveBayesList
 	 */
-	public List<ClassifierEvaluation> getSamplingNaiveBayesList() {
-		return samplingNaiveBayesList;
+	public List<ClassifierEvaluation> getOversamplingNaiveBayesList() {
+		return oversamplingNaiveBayesList;
 	}
 	/**
-	 * @param samplingNaiveBayesList the samplingNaiveBayesList to set
+	 * @param oversamplingNaiveBayesList the samplingNaiveBayesList to set
 	 */
-	public void setSamplingNaiveBayesList(List<ClassifierEvaluation> samplingNaiveBayesList) {
-		this.samplingNaiveBayesList = samplingNaiveBayesList;
+	public void setOversamplingNaiveBayesList(List<ClassifierEvaluation> oversamplingNaiveBayesList) {
+		this.oversamplingNaiveBayesList = oversamplingNaiveBayesList;
 	}
 	/**
 	 * @return the samplingIBkList
 	 */
-	public List<ClassifierEvaluation> getSamplingIBkList() {
-		return samplingIBkList;
+	public List<ClassifierEvaluation> getOversamplingIBkList() {
+		return oversamplingIBkList;
 	}
 	/**
-	 * @param samplingIBkList the samplingIBkList to set
+	 * @param oversamplingIBkList the samplingIBkList to set
 	 */
-	public void setSamplingIBkList(List<ClassifierEvaluation> samplingIBkList) {
-		this.samplingIBkList = samplingIBkList;
+	public void setOversamplingIBkList(List<ClassifierEvaluation> oversamplingIBkList) {
+		this.oversamplingIBkList = oversamplingIBkList;
 	}
 	/**
 	 * @return the costSensRandomForestList
 	 */
-	public List<ClassifierEvaluation> getCostSensRandomForestList() {
-		return costSensRandomForestList;
+	public List<ClassifierEvaluation> getSmoteRandomForestList() {
+		return smoteRandomForestList;
 	}
 	/**
-	 * @param costSensRandomForestList the costSensRandomForestList to set
+	 * @param smoteRandomForestList the costSensRandomForestList to set
 	 */
-	public void setCostSensRandomForestList(List<ClassifierEvaluation> costSensRandomForestList) {
-		this.costSensRandomForestList = costSensRandomForestList;
+	public void setSmoteRandomForestList(List<ClassifierEvaluation> smoteRandomForestList) {
+		this.smoteRandomForestList = smoteRandomForestList;
 	}
 	/**
 	 * @return the costSensNaiveBayesList
 	 */
-	public List<ClassifierEvaluation> getCostSensNaiveBayesList() {
-		return costSensNaiveBayesList;
+	public List<ClassifierEvaluation> getSmoteNaiveBayesList() {
+		return smoteNaiveBayesList;
 	}
 	/**
-	 * @param costSensNaiveBayesList the costSensNaiveBayesList to set
+	 * @param smoteNaiveBayesList the costSensNaiveBayesList to set
 	 */
-	public void setCostSensNaiveBayesList(List<ClassifierEvaluation> costSensNaiveBayesList) {
-		this.costSensNaiveBayesList = costSensNaiveBayesList;
+	public void setSmoteNaiveBayesList(List<ClassifierEvaluation> smoteNaiveBayesList) {
+		this.smoteNaiveBayesList = smoteNaiveBayesList;
 	}
 	/**
 	 * @return the costSensIBkList
 	 */
-	public List<ClassifierEvaluation> getCostSensIBkList() {
-		return costSensIBkList;
+	public List<ClassifierEvaluation> getSmoteIBkList() {
+		return smoteIBkList;
 	}
 	/**
-	 * @param costSensIBkList the costSensIBkList to set
+	 * @param smoteIBkList the costSensIBkList to set
 	 */
-	public void setCostSensIBkList(List<ClassifierEvaluation> costSensIBkList) {
-		this.costSensIBkList = costSensIBkList;
+	public void setSmoteIBkList(List<ClassifierEvaluation> smoteIBkList) {
+		this.smoteIBkList = smoteIBkList;
 	}
 	/**
 	 * @return the avgEvaluationsList

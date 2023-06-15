@@ -15,8 +15,7 @@ public class ClassifierEvaluationUtil {
 	 * retrieveClassifiersEvaluation (RetrieveWekaInfo)*/
 	public static ClassifierEvaluation getAvgEvaluation(List<ClassifierEvaluation> evaluationsList) {
 		
-		ClassifierEvaluation avgEvaluation = new ClassifierEvaluation(evaluationsList.get(0).getProjName(), 0, evaluationsList.get(0).getClassifier(),
-				evaluationsList.get(0).isFeatureSelection(), evaluationsList.get(0).isSampling(), evaluationsList.get(0).isCostSensitive());
+		ClassifierEvaluation avgEvaluation = new ClassifierEvaluation(evaluationsList.get(0).getProjName(), 0, evaluationsList.get(0).getClassifier(), evaluationsList.get(0).isSampling());
 		
 		double precisionSum = 0;
 		double recallSum = 0;

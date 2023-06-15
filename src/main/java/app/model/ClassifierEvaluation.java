@@ -6,9 +6,7 @@ public class ClassifierEvaluation {
 	private int walkForwardIterationIndex;
 	private double trainingPercent;
 	private String classifier;
-	private boolean featureSelection;
-	private boolean sampling;
-	private boolean costSensitive;
+	private String sampling;
 	private double precision;
 	private double recall;
 	private double auc;
@@ -18,13 +16,11 @@ public class ClassifierEvaluation {
 	private double tn;
 	private double fn;
 	
-	public ClassifierEvaluation(String projName, int index, String classifier, boolean featureSelection, boolean sampling, boolean costSensitive) {
+	public ClassifierEvaluation(String projName, int index, String classifier, String sampling) {
 		this.projName = projName;
 		this.walkForwardIterationIndex = index;
 		this.classifier = classifier;
-		this.featureSelection = featureSelection;
 		this.sampling = sampling;
-		this.costSensitive = costSensitive;
 		
 		this.trainingPercent = 0.0;
 		this.precision = 0;
@@ -75,42 +71,16 @@ public class ClassifierEvaluation {
 		this.classifier = classifier;
 	}
 	/**
-	 * @return the featureSelection
-	 */
-	public boolean isFeatureSelection() {
-		return featureSelection;
-	}
-	/**
-	 * @param featureSelection the featureSelection to set
-	 */
-	public void setFeatureSelection(boolean featureSelection) {
-		this.featureSelection = featureSelection;
-	}
-	/**
 	 * @return the sampling
 	 */
-	public boolean isSampling() {
+	public String isSampling() {
 		return sampling;
 	}
 	/**
 	 * @param sampling the sampling to set
 	 */
-	public void setSampling(boolean sampling) {
+	public void setSampling(String sampling) {
 		this.sampling = sampling;
-	}
-	
-	/**
-	 * @return the costSensitive
-	 */
-	public boolean isCostSensitive() {
-		return costSensitive;
-	}
-
-	/**
-	 * @param costSensitive the costSensitive to set
-	 */
-	public void setCostSensitive(boolean costSensitive) {
-		this.costSensitive = costSensitive;
 	}
 
 	/**

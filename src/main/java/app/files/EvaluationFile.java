@@ -21,7 +21,11 @@ public class EvaluationFile {
 	public void csvWrite(String projectName) throws IOException {
 		try(FileWriter fileWriter = new FileWriter(this.path + "_" + this.description + ".csv")){
 
-			fileWriter.append("DATASET, #TRAINING_RELEASES, %TRAINING_INSTANCES, CLASSIFIER, FEATURE_SELECTION, BALANCING, COST_SENSITIVE, PRECISION, RECALL, AUC, KAPPA, TP, FP, TN, FN\n");
+			if (this.description.equals("details")) {
+				fileWriter.append("DATASET, #TRAINING_RELEASES, %TRAINING_INSTANCES, CLASSIFIER, FEATURE_SELECTION, PRECISION, RECALL, AUC, KAPPA, TP, FP, TN, FN\n");
+			} else {
+				fileWriter.append("DATASET, CLASSIFIER, FEATURE_SELECTION, PRECISION, RECALL, AUC, KAPPA, TP, FP, TN, FN\n");
+			}
 
 			for (ClassifierEvaluation classifierEvaluation : this.evaluationsList) {
 
@@ -32,30 +36,14 @@ public class EvaluationFile {
 					fileWriter.append(String.valueOf(classifierEvaluation.getWalkForwardIterationIndex()-1));
 					fileWriter.append(",");
 					fileWriter.append(String.valueOf(classifierEvaluation.getTrainingPercent()));
-				} else {
-					fileWriter.append(",None,None");
 				}
 
 				fileWriter.append(",");
 				fileWriter.append(String.valueOf(classifierEvaluation.getClassifier()));
 
-				if (classifierEvaluation.isFeatureSelection()) {
-					fileWriter.append(",Greedy backward search,");
-				} else {
-					fileWriter.append(",None,");
-				}
-
-				if (classifierEvaluation.isSampling()) {
-					fileWriter.append("Undersampling,");
-				} else {
-					fileWriter.append("None,");
-				}
-
-				if (classifierEvaluation.isCostSensitive()) {
-					fileWriter.append("Sensitive learning,");
-				} else {
-					fileWriter.append("None,");
-				}
+				fileWriter.append(",");
+				fileWriter.append(classifierEvaluation.isSampling());
+				fileWriter.append(",");
 
 				fileWriter.append(String.valueOf(classifierEvaluation.getPrecision()));
 				fileWriter.append(",");
