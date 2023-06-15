@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.logging.Logger;
 
 public class RetrieveWekaInfo {
-	private static final Logger LOGGER = Logger.getLogger(ClassifierClass.class.getName());
+	private static final Logger LOGGER = Logger.getLogger(RetrieveWekaInfo.class.getName());
 	private static final String RANDOM_FOREST = "Random Forest";
 	private static final String NAIVE_BAYES = "Naive Bayes";
 	private static final String IBK = "IBk";
