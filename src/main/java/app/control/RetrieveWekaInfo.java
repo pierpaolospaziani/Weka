@@ -1,5 +1,6 @@
 package app.control;
 
+import app.ClassifierClass;
 import app.model.AllEvaluationLists;
 import app.model.ClassifierEvaluation;
 import app.utils.ClassifierEvaluationUtil;
@@ -19,12 +20,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.logging.Logger;
 
 public class RetrieveWekaInfo {
-
+	private static final Logger LOGGER = Logger.getLogger(ClassifierClass.class.getName());
 	private static final String RANDOM_FOREST = "Random Forest";
 	private static final String NAIVE_BAYES = "Naive Bayes";
 	private static final String IBK = "IBk";
+	private static final String NO_SAMPLING = "No Sampling";
+	private static final String OVERSAMPLING = "Oversampling";
+	private static final String UNDERSAMPLING = "Undersampling";
+	private static final String SMOTE = "SMOTE";
 	private final String path;
 	private final Integer releaseIndex;
 
@@ -49,7 +55,6 @@ public class RetrieveWekaInfo {
 		List<ClassifierEvaluation> smoteIBkList = new ArrayList<>();
 
 		for(int index = 2; index < this.releaseIndex+1; index++){
-			System.out.println(index);
 
 			String completePath = this.path + index;
 			DataSource source1 = new DataSource(completePath + "/Train.arff");
@@ -74,7 +79,7 @@ public class RetrieveWekaInfo {
 
 			randomForestClassifier.buildClassifier(training);
 			eval.evaluateModel(randomForestClassifier, testing);
-			ClassifierEvaluation simpleRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "No Sampling");
+			ClassifierEvaluation simpleRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, NO_SAMPLING);
 			simpleRandomForest.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleRandomForest.setPrecision(eval.precision(0));
 			simpleRandomForest.setRecall(eval.recall(0));
@@ -88,7 +93,7 @@ public class RetrieveWekaInfo {
 
 			naiveBayesClassifier.buildClassifier(training);
 			eval.evaluateModel(naiveBayesClassifier, testing);
-			ClassifierEvaluation simpleNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "No Sampling");
+			ClassifierEvaluation simpleNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, NO_SAMPLING);
 			simpleNaiveBayes.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleNaiveBayes.setPrecision(eval.precision(0));
 			simpleNaiveBayes.setRecall(eval.recall(0));
@@ -102,7 +107,7 @@ public class RetrieveWekaInfo {
 
 			ibkClassifier.buildClassifier(training);
 			eval.evaluateModel(ibkClassifier, testing);
-			ClassifierEvaluation simpleIBk = new ClassifierEvaluation(projectName, index, IBK, "No Sampling");
+			ClassifierEvaluation simpleIBk = new ClassifierEvaluation(projectName, index, IBK, NO_SAMPLING);
 			simpleIBk.setTrainingPercent(100.0*training.numInstances()/(training.numInstances()+testing.numInstances()));
 			simpleIBk.setPrecision(eval.precision(0));
 			simpleIBk.setRecall(eval.recall(0));
@@ -129,7 +134,7 @@ public class RetrieveWekaInfo {
 
 			randomForestClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(randomForestClassifier, filteredTesting);
-			ClassifierEvaluation oversamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "Oversampling");
+			ClassifierEvaluation oversamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, OVERSAMPLING);
 			oversamplingRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			oversamplingRandomForest.setPrecision(eval.precision(0));
 			oversamplingRandomForest.setRecall(eval.recall(0));
@@ -143,7 +148,7 @@ public class RetrieveWekaInfo {
 
 			naiveBayesClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
-			ClassifierEvaluation oversamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "Oversampling");
+			ClassifierEvaluation oversamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, OVERSAMPLING);
 			oversamplingNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			oversamplingNaiveBayes.setPrecision(eval.precision(0));
 			oversamplingNaiveBayes.setRecall(eval.recall(0));
@@ -157,7 +162,7 @@ public class RetrieveWekaInfo {
 
 			ibkClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(ibkClassifier, filteredTesting);
-			ClassifierEvaluation oversamplingIBk = new ClassifierEvaluation(projectName, index, IBK, "Oversampling");
+			ClassifierEvaluation oversamplingIBk = new ClassifierEvaluation(projectName, index, IBK, OVERSAMPLING);
 			oversamplingIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			oversamplingIBk.setPrecision(eval.precision(0));
 			oversamplingIBk.setRecall(eval.recall(0));
@@ -183,7 +188,7 @@ public class RetrieveWekaInfo {
 
 			randomForestClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(randomForestClassifier, filteredTesting);
-			ClassifierEvaluation undersamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "Undersampling");
+			ClassifierEvaluation undersamplingRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, UNDERSAMPLING);
 			undersamplingRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			undersamplingRandomForest.setPrecision(eval.precision(0));
 			undersamplingRandomForest.setRecall(eval.recall(0));
@@ -197,7 +202,7 @@ public class RetrieveWekaInfo {
 
 			naiveBayesClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
-			ClassifierEvaluation undersamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "Undersampling");
+			ClassifierEvaluation undersamplingNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, UNDERSAMPLING);
 			undersamplingNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			undersamplingNaiveBayes.setPrecision(eval.precision(0));
 			undersamplingNaiveBayes.setRecall(eval.recall(0));
@@ -211,7 +216,7 @@ public class RetrieveWekaInfo {
 
 			ibkClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(ibkClassifier, filteredTesting);
-			ClassifierEvaluation undersamplingIBk = new ClassifierEvaluation(projectName, index, IBK, "Undersampling");
+			ClassifierEvaluation undersamplingIBk = new ClassifierEvaluation(projectName, index, IBK, UNDERSAMPLING);
 			undersamplingIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			undersamplingIBk.setPrecision(eval.precision(0));
 			undersamplingIBk.setRecall(eval.recall(0));
@@ -231,7 +236,9 @@ public class RetrieveWekaInfo {
 			smote.setInputFormat(training);
 			try {
 				filteredTraining = Filter.useFilter(training, smote);
-			} catch (Exception ignored) {}
+			} catch (Exception e){
+				LOGGER.info("");
+			}
 			filteredTesting = Filter.useFilter(testing, smote);
 
 			numAttr = filteredTraining.numAttributes();
@@ -239,7 +246,7 @@ public class RetrieveWekaInfo {
 
 			randomForestClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(randomForestClassifier, filteredTesting);
-			ClassifierEvaluation smoteRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, "SMOTE");
+			ClassifierEvaluation smoteRandomForest = new ClassifierEvaluation(projectName, index, RANDOM_FOREST, SMOTE);
 			smoteRandomForest.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			smoteRandomForest.setPrecision(eval.precision(0));
 			smoteRandomForest.setRecall(eval.recall(0));
@@ -253,7 +260,7 @@ public class RetrieveWekaInfo {
 
 			naiveBayesClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(naiveBayesClassifier, filteredTesting);
-			ClassifierEvaluation smoteNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, "SMOTE");
+			ClassifierEvaluation smoteNaiveBayes = new ClassifierEvaluation(projectName, index, NAIVE_BAYES, SMOTE);
 			smoteNaiveBayes.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			smoteNaiveBayes.setPrecision(eval.precision(0));
 			smoteNaiveBayes.setRecall(eval.recall(0));
@@ -267,7 +274,7 @@ public class RetrieveWekaInfo {
 
 			ibkClassifier.buildClassifier(filteredTraining);
 			eval.evaluateModel(ibkClassifier, filteredTesting);
-			ClassifierEvaluation smoteIBk = new ClassifierEvaluation(projectName, index, IBK, "SMOTE");
+			ClassifierEvaluation smoteIBk = new ClassifierEvaluation(projectName, index, IBK, SMOTE);
 			smoteIBk.setTrainingPercent(100.0*filteredTraining.numInstances()/(filteredTraining.numInstances()+filteredTesting.numInstances()));
 			smoteIBk.setPrecision(eval.precision(0));
 			smoteIBk.setRecall(eval.recall(0));
