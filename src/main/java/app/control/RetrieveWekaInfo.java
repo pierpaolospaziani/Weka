@@ -1,6 +1,5 @@
 package app.control;
 
-import app.ClassifierClass;
 import app.model.AllEvaluationLists;
 import app.model.ClassifierEvaluation;
 import app.utils.ClassifierEvaluationUtil;
